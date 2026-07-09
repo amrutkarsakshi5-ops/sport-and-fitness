@@ -1,0 +1,374 @@
+{
+	"info": {
+		"name": "Sports & Fitness Discovery Platform API",
+		"description": "Version 1 API Endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"firebase_uid_test\",\n    \"email\": \"test@example.com\",\n    \"role\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/auth/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Businesses",
+			"item": [
+				{
+					"name": "Get All Businesses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/businesses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"businesses"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Business By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/businesses/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"businesses",
+								"1"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Vendor",
+			"item": [
+				{
+					"name": "Create Vendor Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"business_name\": \"My New Gym\",\n    \"description\": \"Best gym in town\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vendor/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vendor",
+								"profile"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Vendor Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Updated best gym description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vendor/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vendor",
+								"profile"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Vendor Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/vendor/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vendor",
+								"profile"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Yoga Class\",\n    \"price\": 15.00,\n    \"description\": \"1 hr evening session\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vendor/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vendor",
+								"services"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get Pending Vendors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/vendors/pending",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"vendors",
+								"pending"
+							]
+						}
+					}
+				},
+				{
+					"name": "Approve Vendor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/vendors/1/approve",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"vendors",
+								"1",
+								"approve"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reject Vendor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer YOUR_FIREBASE_ID_TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/vendors/1/reject",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"vendors",
+								"1",
+								"reject"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

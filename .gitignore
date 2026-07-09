@@ -1,0 +1,43 @@
+# Node.js dependencies
+node_modules/
+backend/node_modules/
+mobile/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*
+
+# Expo files & caches
+.expo/
+.expo-shared/
+.expo/web/
+.expo/android/
+.expo/ios/
+.expo/cache/
+
+# Build directories (Android & iOS)
+android/
+ios/
+
+# IDE / editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Jest coverage
+coverage/
+
+# Misc
+.tmp/
+*.log
