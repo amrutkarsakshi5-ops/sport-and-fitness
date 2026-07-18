@@ -44,18 +44,22 @@ const UserTabNavigator = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#00D09E',
-        tabBarInactiveTintColor: '#A0A0A0',
+        tabBarActiveTintColor: '#2563EB',
+        tabBarInactiveTintColor: '#94A3B8',
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopWidth: 0,
-          elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
+          backgroundColor: '#ffffff',
+          borderTopColor: '#E2E8F0',
+          borderTopWidth: 1,
+          elevation: 0,
+          shadowOpacity: 0,
           height: 60,
           paddingBottom: 8,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '600',
+          letterSpacing: 0.3,
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -64,7 +68,7 @@ const UserTabNavigator = () => {
           else if (route.name === 'Search') iconName = focused ? 'search' : 'search-outline';
           else if (route.name === 'Profile') iconName = focused ? 'person' : 'person-outline';
 
-          return <Ionicons name={iconName} size={24} color={color} />;
+          return <Ionicons name={iconName} size={22} color={color} />;
         },
       })}
     >

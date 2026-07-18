@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     borderRadius: 140,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#00D09E',
+    shadowColor: '#2563EB',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
     shadowRadius: 20,

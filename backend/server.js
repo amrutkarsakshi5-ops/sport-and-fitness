@@ -1,7 +1,13 @@
 const app = require('./src/app');
+const { syncDatabase } = require('./src/models');
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+const startServer = async () => {
+    await syncDatabase();
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+};
+
+startServer();

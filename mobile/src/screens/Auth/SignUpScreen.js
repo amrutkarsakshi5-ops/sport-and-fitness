@@ -1,176 +1,175 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
-import CustomButton from '../../components/CustomButton';
-import CustomInput from '../../components/CustomInput';
+import { AuthContext } from '../../context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 const SignUpScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  
+  const { loginContext } = useContext(AuthContext);
 
-  const validate = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
-    if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSignUp = async () => {
-    if (!validate()) return;
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
     
+    if (__DEV__) {
+      setLoading(true);
+      setTimeout(async () => {
+        await loginContext('user');
+        setLoading(false);
+      }, 500);
+      return;
+    }
+    
+    if (!email || !password || !name) return;
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert('Success', 'Account created! Please log in.');
-      navigation.navigate('Login');
+      // Logic to save name/profile would go here
+      await loginContext('user');
     } catch (error) {
-      Alert.alert('Sign Up Error', error.message);
+      console.error('Registration Failed', error);
+      alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-      <LinearGradient colors={['#ffffff', '#F0F9F7']} style={styles.gradient}>
+    <View style={styles.container}>
+      <LinearGradient colors={['#0F172A', '#1E3A5F', '#2563EB']} style={styles.header}>
+        <View style={styles.headerTop}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={17} color="#ffffff" />
+          </TouchableOpacity>
+          <View style={styles.iconWrapper}>
+            <Ionicons name="barbell-outline" size={16} color="#ffffff" />
+          </View>
+          <Text style={styles.brandName}>Sports & Fitness Discovery Platform</Text>
+        </View>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Step 1 — Your details & password</Text>
+      </LinearGradient>
+
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.formContainer}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           
-          <View style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join us and discover local sports and fitness venues</Text>
+          <View style={styles.field}>
+            <Text style={styles.label}>FULL NAME</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="person-outline" size={16} color="#94A3B8" />
+              <TextInput
+                style={styles.input}
+                placeholder="Jordan Davis"
+                placeholderTextColor="#94A3B8"
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
           </View>
 
-          <View style={styles.form}>
-            <CustomInput
-              label="Email Address"
-              placeholder="Enter your email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              error={errors.email}
-            />
-            
-            <CustomInput
-              label="Password"
-              placeholder="Create a password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              error={errors.password}
-            />
+          <View style={styles.field}>
+            <Text style={styles.label}>EMAIL ADDRESS</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="mail-outline" size={16} color="#94A3B8" />
+              <TextInput
+                style={styles.input}
+                placeholder="you@email.com"
+                placeholderTextColor="#94A3B8"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
 
-            <Text style={styles.roleLabel}>I am a...</Text>
-            <View style={styles.roleContainer}>
-              <TouchableOpacity 
-                style={[styles.roleCard, role === 'user' && styles.roleCardActive]} 
-                onPress={() => setRole('user')}
-              >
-                <Text style={[styles.roleText, role === 'user' && styles.roleTextActive]}>User</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.roleCard, role === 'vendor' && styles.roleCardActive]} 
-                onPress={() => setRole('vendor')}
-              >
-                <Text style={[styles.roleText, role === 'vendor' && styles.roleTextActive]}>Vendor</Text>
+          <View style={styles.field}>
+            <Text style={styles.label}>PASSWORD</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={16} color="#94A3B8" />
+              <TextInput
+                style={styles.input}
+                placeholder="Minimum 8 characters"
+                placeholderTextColor="#94A3B8"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={16} color="#94A3B8" />
               </TouchableOpacity>
             </View>
-
-            <CustomButton title="Sign Up" onPress={handleSignUp} loading={loading} style={{marginTop: 20}} />
           </View>
+
+          <View style={styles.field}>
+            <Text style={styles.label}>CONFIRM PASSWORD</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={16} color="#94A3B8" />
+              <TextInput
+                style={styles.input}
+                placeholder="Re-enter password"
+                placeholderTextColor="#94A3B8"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirm}
+              />
+              <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
+                <Ionicons name={showConfirm ? "eye-off-outline" : "eye-outline"} size={16} color="#94A3B8" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity onPress={handleRegister} style={styles.loginButton} disabled={loading}>
+            <LinearGradient colors={['#1D4ED8', '#2563EB']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.loginGradient}>
+              <Text style={styles.loginButtonText}>{loading ? 'Creating...' : 'Create Account 🎉'}</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
-            <CustomButton title="Log In" type="TERTIARY" onPress={() => navigation.navigate('Login')} />
+            <Text style={styles.footerText}>Already registered? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.createAccountText}>Sign In</Text>
+            </TouchableOpacity>
           </View>
-
         </ScrollView>
-      </LinearGradient>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 24,
-    justifyContent: 'center',
-  },
-  header: {
-    marginBottom: 30,
-    marginTop: 40,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#1E1E1E',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#757575',
-    lineHeight: 24,
-  },
-  form: {
-    marginBottom: 20,
-  },
-  roleLabel: {
-    fontSize: 14,
-    color: '#1E1E1E',
-    marginBottom: 12,
-    fontWeight: '600',
-    marginTop: 10,
-  },
-  roleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  roleCard: {
-    flex: 1,
-    paddingVertical: 16,
-    borderWidth: 2,
-    borderColor: '#E0E0E0',
-    borderRadius: 12,
-    alignItems: 'center',
-    marginHorizontal: 5,
-    backgroundColor: '#FFFFFF',
-  },
-  roleCardActive: {
-    borderColor: '#00D09E',
-    backgroundColor: '#E6F9F5',
-  },
-  roleText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#A0A0A0',
-  },
-  roleTextActive: {
-    color: '#00D09E',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 'auto',
-    marginBottom: 20,
-  },
-  footerText: {
-    color: '#757575',
-    fontSize: 14,
-  }
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  header: { padding: 24, paddingTop: 60, paddingBottom: 40 },
+  headerTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 18 },
+  backButton: { width: 34, height: 34, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+  iconWrapper: { width: 32, height: 32, borderRadius: 9, backgroundColor: '#2563EB', alignItems: 'center', justifyContent: 'center', marginRight: 8 },
+  brandName: { fontSize: 15, fontWeight: '800', color: '#ffffff' },
+  title: { fontSize: 22, fontWeight: '800', color: '#ffffff', marginBottom: 5 },
+  subtitle: { fontSize: 12, color: 'rgba(255,255,255,0.65)' },
+  formContainer: { flex: 1, marginTop: -20, backgroundColor: '#ffffff', borderTopLeftRadius: 22, borderTopRightRadius: 22, paddingHorizontal: 20 },
+  scrollContent: { paddingTop: 24, paddingBottom: 30 },
+  field: { marginBottom: 14 },
+  label: { fontSize: 11, fontWeight: '700', color: '#374151', marginBottom: 6, letterSpacing: 0.6 },
+  inputWrapper: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC', borderColor: '#E2E8F0', borderWidth: 1.5, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12 },
+  input: { flex: 1, fontSize: 14, color: '#0F172A', marginLeft: 10 },
+  loginButton: { borderRadius: 14, overflow: 'hidden', marginTop: 10, marginBottom: 18, shadowColor: '#2563EB', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.35, shadowRadius: 14, elevation: 5 },
+  loginGradient: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 14 },
+  loginButtonText: { fontSize: 15, fontWeight: '700', color: '#ffffff' },
+  footer: { flexDirection: 'row', justifyContent: 'center' },
+  footerText: { fontSize: 13, color: '#64748B' },
+  createAccountText: { fontSize: 13, fontWeight: '700', color: '#2563EB' }
 });
 
 export default SignUpScreen;

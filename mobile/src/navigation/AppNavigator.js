@@ -30,8 +30,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      {/* Temporarily bypassed auth protection for testing */}
-      <MainStack />
+      {user ? <MainStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

@@ -1,15 +1,16 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'sports_db',
-  process.env.DB_USER || 'postgres',
-  process.env.DB_PASSWORD || 'password',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'postgres',
-    logging: false,
-  }
-);
+// Log environment hints to help diagnose which dialect Sequelize will use.
+console.log('DB config init — NODE_ENV:', process.env.NODE_ENV || 'undefined');
+console.log('DB config init — DATABASE_URL:', process.env.DATABASE_URL ? '[REDACTED]' : 'not set');
+
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite',
+  logging: false,
+});
+
+console.log('Sequelize dialect selected:', sequelize.getDialect());
 
 module.exports = sequelize;

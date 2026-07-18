@@ -6,6 +6,7 @@ import BusinessCard from '../../components/BusinessCard';
 const BusinessListingScreen = ({ route, navigation }) => {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // route.params could hold categoryId if coming from CategoryCard
   const categoryId = route.params?.categoryId;
@@ -14,17 +15,32 @@ const BusinessListingScreen = ({ route, navigation }) => {
     // In a real app, you might pass ?category_id=... to filter via backend
     api.get('/businesses')
       .then(res => {
-        // Mock filtering client-side for now if we had category association
-        setBusinesses(res.data);
+        console.log('BUSINESS LISTING DATA:', res.data);
+        let data = res.data;
+        if (categoryId) {
+          data = data.filter(b => b.category_id === categoryId);
+        }
+        setBusinesses(data);
         setLoading(false);
       })
-      .catch(err => setLoading(false));
+      .catch(err => {
+        setError('Failed to load data. Please try again later.');
+        setLoading(false);
+      });
   }, [categoryId]);
 
   if (loading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#00D09E" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
   }
@@ -57,6 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorText: { color: '#EF4444', fontSize: 16 },
   list: {
     padding: 24,
   },
