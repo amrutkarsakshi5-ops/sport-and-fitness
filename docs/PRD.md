@@ -25,7 +25,7 @@ The Sports & Fitness Discovery Platform enables customers to discover gym sessio
 - **Dynamic Class Scheduler**: Multi-tier scheduling (regular days of week, blocked slots, specific dates).
 - **Booking Lifecycle Handlers**: Process bookings from `PENDING` -> `CONFIRMED` or `CANCELLED`, and complete bookings with check-in.
 - **Payment Reconciliation Ledger**: Track sales transactions, platform fees, gateway fees, and net vendor payout shares.
-- **Ratings & Reviews Moderator**: Fetch scores and submit response comments to feedback.
+- **Ratings & Reviews Moderator**: Fetch scores and submit response comments to feedback
 
 ---
 
